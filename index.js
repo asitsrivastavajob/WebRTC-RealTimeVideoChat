@@ -16,12 +16,12 @@ io.on("connection",function(socket){
     socket.on("join",function(roomName){
         let rooms = io.sockets.adapter.rooms;
         let room = rooms.get(roomName);
-        console.log("rooms : ",room);
-        console.log("Total no of rooms : ",rooms.size);
-        console.log("Room Name :: ",roomName);
+        //console.log("rooms : ",room);
+        //console.log("Total no of rooms : ",rooms.size);
+        //console.log("Room Name :: ",roomName);
         if (room == undefined)
         {
-            console.log("As no room defined , so room Created");
+            console.log("Room Created");
             socket.join(roomName);
             socket.emit("created");
         }
@@ -37,24 +37,24 @@ io.on("connection",function(socket){
     });
 
     socket.on("ready",function(roomName){
-        console.log("server broadcast ready");
+        //console.log("server broadcast ready");
         socket.broadcast.to(roomName).emit("ready");
     });
 
     socket.on("candidate",function(candidate,roomName){
-        console.log("server broadcast candidate");
+        //console.log("server broadcast candidate");
         //console.log(candidate);
         socket.broadcast.to(roomName).emit("candidate",candidate);
     });
 
     socket.on("offer",function(offer,roomName){
-        console.log("server broadcast offer");
+        //console.log("server broadcast offer");
         //console.log(offer);
         socket.broadcast.to(roomName).emit("offer",offer);
     });
 
     socket.on("answer",function(answer,roomName){
-        console.log("server broadcast answer");
+        //console.log("server broadcast answer");
         //console.log(answer);
         socket.broadcast.to(roomName).emit("answer",answer);
     });

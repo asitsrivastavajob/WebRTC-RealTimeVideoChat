@@ -24,8 +24,6 @@ joinButton.addEventListener("click",function(){
     else
     {
         roomName = roomInput.value;
-        //console.log("client emit join");
-        //alert("client emit join");
         socket.emit("join",roomName);
     }
 });
@@ -37,17 +35,13 @@ socket.on("created",function(){
     navigator.mediaDevices.getUserMedia(constraints)
     .then(function(stream) {
         userStream = stream;
-        //alert("mediaStream value :",stream);
-        //alert("userStream value :",userStream);
         div_VideoChatLobby.style = "display:none";
         userVideo.srcObject = stream;
         userVideo.onloadedmetadata = function(e) {
             userVideo.play();
         };
-        
     })
     .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
-    
 });
 
 socket.on("joined",function(){
@@ -57,17 +51,13 @@ socket.on("joined",function(){
     .then(function(stream) {
         userStream = stream;
         div_VideoChatLobby.style = "display:none";
-        
         userVideo.srcObject = stream;
         userVideo.onloadedmetadata = function(e) {
-        userVideo.play();
+			userVideo.play();
         };
-        //console.log("client emit ready");
-        //alert("client emit ready");
         socket.emit("ready",roomName);
     })
     .catch(function(err) { console.log(err.name + ": " + err.message); }); // always check for errors at the end.
-
 });
 
 socket.on("full",function(){
@@ -85,7 +75,6 @@ socket.on("ready",function(){
         rtcPeerConnection.createOffer(
             function(offer){
                 rtcPeerConnection.setLocalDescription(offer);
-                //alert("client emit offer");
                 socket.emit("offer",offer,roomName);
             },
             function(error){
@@ -102,28 +91,18 @@ socket.on("candidate",function(candidate){
 });
 
 socket.on("offer",function(offer){
-    //alert("client offer called");
     if(!room_creator)
     {
-        //alert("client offer called 1");
         rtcPeerConnection = new RTCPeerConnection(iceServers);
-        //alert("client offer called 2");
         rtcPeerConnection.onicecandidate = OnIceCandidate;
-        //alert("client offer called 3");
         rtcPeerConnection.ontrack = Ontrack;
-        //alert("client offer called 4");
-        //alert("userStream value :",userStream);
         rtcPeerConnection.addTrack(userStream.getTracks()[0],userStream);
-        //alert("client offer called 5");
         rtcPeerConnection.addTrack(userStream.getTracks()[1],userStream);
-        //alert("client offer called 6");
         rtcPeerConnection.setRemoteDescription(offer);
-        //alert("client offer called 7");
         rtcPeerConnection.createAnswer(
             function(answer){
                 rtcPeerConnection.setLocalDescription(answer);
                 socket.emit("answer",answer,roomName);
-                //alert("client emit answer");
             },
             function(error){
                 console.log(error);
@@ -138,10 +117,8 @@ socket.on("answer",function(answer){
 
 function OnIceCandidate(event)
 {
-    //alert("Candidate");
     if(event.candidate){
         socket.emit("candidate",event.candidate,roomName);
-        //console.log("client emit candidate");
     }
 }
 
